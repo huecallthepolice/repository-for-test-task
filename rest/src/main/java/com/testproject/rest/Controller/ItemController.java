@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,13 +20,10 @@ public class ItemController {
     @GetMapping("/items")
     public ResponseEntity<List<Item>> getAll() {
         try {
-            List<Item> items = new ArrayList<Item>();
-            itemService.findAll().forEach(items::add);
-            if (items.isEmpty()) {
+            if (itemService.findAll().isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-
-            return new ResponseEntity<>(items, HttpStatus.OK);
+            return new ResponseEntity<>(itemService.findAll(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -10,11 +10,20 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExeptionHandler {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+//    @ExceptionHandler({MethodArgumentNotValidException.class})
+//    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+//        Map<String, String> errors = new HashMap<>();
+//        ex.getBindingResult().getFieldErrors().forEach(error ->
+//                errors.put(error.getField(), error.getDefaultMessage()));
+//        return ResponseEntity.badRequest().body(errors);
+//    }
+
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage()));
+        errors.put("error", ex.getMessage()); // Добавляем сообщение об ошибке в карту
+
         return ResponseEntity.badRequest().body(errors);
     }
 }

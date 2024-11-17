@@ -1,6 +1,8 @@
 package com.testproject.rest.Service;
 
 import com.testproject.rest.Model.Item;
+import com.testproject.rest.Repository.ItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,50 +13,38 @@ import java.util.Optional;
 @Service
 public class ItemService {
 
-    private final List<Item> items = new ArrayList<Item>();
-    long idNow = 1;
+    @Autowired
+    private ItemRepository itemRepository;
+
 
     public List<Item> findAll() {
-        return items;
+        return itemRepository.findAll();
     }
 
-
-
     public Item findById(Long id) {
-        return items.stream().filter(item -> id.equals(item.getId())).findAny().orElse(null);
-        //  return items.stream().filter(item -> id == item.getId()).findAny().orElse(null);
+        return itemRepository.findById(id).orElse(null);
     }
 
 
     public Item createItem(Item item) {
-        Item newItem = new Item();
-        newItem.setId(idNow++);
-        newItem.setName(item.getName());
-        newItem.setDescription(item.getDescription());
-        newItem.setPrice(item.getPrice() != null ? item.getPrice() : BigDecimal.ZERO);
-        newItem.setInStock(item.isInStock());
-        items.add(newItem);
-        return newItem;
+        return itemRepository.save(item);
     }
 
     public Item updateItem(Long id, Item item) {
-        Item oldItem = findById(id);
-        if (oldItem != null) {
-            oldItem.setName(item.getName());
-            oldItem.setDescription(item.getDescription());
-            oldItem.setPrice(item.getPrice() != null ? item.getPrice() : BigDecimal.ZERO);
-            oldItem.setInStock(item.isInStock());
-            return oldItem;
-        }
+      if(itemRepository.existsById(id)) {
+          item.setId(id);
+          return itemRepository.save(item);
+      }
         return null;
     }
 
     public void deleteById(Long id) {
-        items.removeIf(item -> id.equals(item.getId()));
+        if(itemRepository.existsById(id)) {itemRepository.deleteById(id);};
     }
 
     public void deleteAll() {
-        items.removeAll(items);
+       itemRepository.deleteAll();
+
     }
 
 
