@@ -22,8 +22,7 @@ public class ExeptionHandler {
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("error", ex.getMessage()); // Добавляем сообщение об ошибке в карту
-
+        errors.put("error", ex.getMessage());
         return ResponseEntity.badRequest().body(errors);
     }
 }
