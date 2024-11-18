@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -18,12 +19,18 @@ public class ItemController {
 
 
     @GetMapping("/items")
-    public ResponseEntity<List<Item>> getAll() {
+    public ResponseEntity<List<Item>> getAll(@RequestParam(required = false) String name,
+                                             @RequestParam(required = false) BigDecimal price,
+                                             @RequestParam(required = false) BigDecimal minPrice,
+                                             @RequestParam(required = false) BigDecimal maxPrice,
+                                             @RequestParam(required = false) Boolean inStock,
+                                             @RequestParam(required = false, defaultValue = "name") String sortBy,
+                                             @RequestParam(required = false, defaultValue = "5") int limit) {
         try {
-            if (itemService.findAll().isEmpty()) {
+            if (itemService.sortingAndFiltering(name, price, minPrice, maxPrice, inStock, sortBy, limit).isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(itemService.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(itemService.sortingAndFiltering(name, price, minPrice, maxPrice, inStock, sortBy, limit), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
