@@ -22,7 +22,7 @@ public class ItemService {
 
     public Item findById(Long id) {
         return items.stream().filter(item -> id.equals(item.getId())).findAny().orElse(null);
-        //  return items.stream().filter(item -> id == item.getId()).findAny().orElse(null);
+
     }
 
 
